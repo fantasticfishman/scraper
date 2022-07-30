@@ -98,7 +98,11 @@ def main():
             #get page number
             try:
                 #if user wants to go to specific page when searching, do same thing where check if folder already exists
-                page = int(input('enter the page number you would like to go to or leave blank for page 1 '))
+                search = input('enter the page number you would like to go to or leave blank for page 1 ')
+                if(search == ''):
+                    page =  1
+                else: 
+                    page = int(search)
                 if(os.path.exists(os.path.join(ogdir,arg))):
                     os.chdir(os.path.join(ogdir,arg))
                     largest = 0
