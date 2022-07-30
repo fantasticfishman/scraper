@@ -3,20 +3,26 @@ from bs4 import BeautifulSoup
 import os
 
 
+#function to download images, given search term
 def imagedown(search,page,index):
-    #searchurl = search.replace(' ','+')
+    #searches wallhaven for search term on specififed page
     url = 'https://wallhaven.cc/search?q='+search+'&page='+str(page)
     r = requests.get(url)
+    #scrape html code from webpage
     soup = BeautifulSoup(r.text, 'html.parser')
 
-
+    #finds all href image links
     figures = soup.find_all('figure')
     href = []
     for figure in figures:
         h = figure.find('a').get('href')
         href.append(h)
         print(h)
-        
+    
+    #find link to full image, not thumbnail
+    #if image is not a jpg, this will produce 404 error, 
+    #in that case use png instead of jpg in the image link
+    #then write to current directory, file name will be '(Search Term) (Index).png/jpg'
     count = index
     for link in href:
         name = str(count)
@@ -39,7 +45,9 @@ def imagedown(search,page,index):
 
 
 def main():
+    #main function, runs when file is run
     ogdir = os.getcwd()
+    #arg to check if they put a search term yet, page number, and index is the number to put after the downloaded photo
     arg = 'cringe'
     page = 1
     index = 1
@@ -47,25 +55,28 @@ def main():
         #get the search term
         oldarg = arg
         arg = input('Enter your search term, type continue to go to the next page of your previous search term, or type quit to quit ')
-        #exit
+        #exit if user says quit
         if(arg == 'quit'):
             print('see you next time')
             exit()
         elif(arg == 'continue' and oldarg == 'cringe'):
             print('baka')
             continue
-            #if continue without selecting search term
+            #if continue without selecting search term, try again because cannot go to next page
         if(arg == 'continue' and oldarg != 'cringe'):
             page += 1
             index = imagedown(oldarg,page,index)
             print('You are currently on page '+str(page))
-            #continue
+            #continue and go to next page
         else:
-            #if no keywords, then search
-            #check if search term has changed, if so make new dir and reset everything
+            #if no other keywords, then search using input
+            #check if search term has changed, if so make new dir and reset page and index
             if (arg != oldarg):
                 page = 1
                 index = 1
+                #if image folder exists already because user searched this term before, 
+                #then change directory to that folder and find largest index in that folder
+                #all future downloaded images will have index larger than that so no duplicate filenames
                 if(os.path.exists(os.path.join(ogdir,arg))):
                     os.chdir(os.path.join(ogdir,arg))
                     largest = 0
@@ -77,6 +88,7 @@ def main():
                     print(largest)
                     index = largest+1
                 else:
+                #if folder does not already exist create the directory and change to it
                     try:
                         os.chdir(ogdir)
                         os.mkdir(os.path.join(ogdir,arg))
@@ -85,6 +97,7 @@ def main():
                         pass
             #get page number
             try:
+                #if user wants to go to specific page when searching, do same thing where check if folder already exists
                 page = int(input('enter the page number you would like to go to or leave blank for page 1 '))
                 if(os.path.exists(os.path.join(ogdir,arg))):
                     os.chdir(os.path.join(ogdir,arg))
@@ -104,9 +117,11 @@ def main():
                     except:
                         pass
             except:
+                #if page not given
                 print('thats not a page baka')
                 continue
             if(input == ''):
+                #if page not specified
                 page = 1
             #search for wallpaper and write to current directory, increment index
             index = imagedown(arg,page,index)
