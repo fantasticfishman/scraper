@@ -1,2 +1,6 @@
 make usable for diff sites
 randomize wallpapers
+
+comment
+readme
+put on resume
