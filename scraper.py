@@ -57,7 +57,7 @@ def main():
         arg = input('Enter your search term, type continue to go to the next page of your previous search term, or type quit to quit ')
         #exit if user says quit
         if(arg == 'quit'):
-            print('see you next time')
+            print('See you next time')
             exit()
         elif(arg == 'continue' and oldarg == 'cringe'):
             print('baka')
@@ -98,7 +98,7 @@ def main():
             #get page number
             try:
                 #if user wants to go to specific page when searching, do same thing where check if folder already exists
-                search = input('enter the page number you would like to go to or leave blank for page 1 ')
+                search = input('Enter the page number you would like to go to or leave blank for page 1 ')
                 if(search == ''):
                     page =  1
                 else: 
@@ -122,7 +122,7 @@ def main():
                         pass
             except:
                 #if page not given
-                print('thats not a page baka')
+                print('Thats not a page, baka')
                 continue
             if(input == ''):
                 #if page not specified
